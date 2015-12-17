@@ -1,0 +1,92 @@
+<h3>Good Work!</h3>
+
+<%= button_to "Log Out", sessions_path, method: :delete %>
+
+<% if current_employee.rights_class == 2 %>
+
+  <%= form_for @employee do |f| %>
+    <%= f.label :username %>
+    <%= f.text_field :username %>
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+    <%= f.label :cell %>
+    <%= f.text_field :cell %>
+    <%= f.select :rights_class, [['Manager', 2], ['Server', 1]] %>
+    <%= f.submit  %>
+  <% end %>
+
+  <% @employees.each do |employee| %>
+        <%= employee.username %>,
+        <%= employee.email %>,
+        <%= employee.cell %>,
+        <%= employee.rights_class %>
+        <%= link_to "Edit", edit_employee_path(employee) %>
+        <%= button_to "x", employee_path(employee), method: :delete %><br />
+  <% end %>
+
+  <%= form_for @entree do |f| %>
+    <%= f.label :item %>
+    <%= f.text_field :item %>
+    <%= f.select :category, ['Appetizer', 'Pasta', 'Fish', 'Grill', 'Healthy', 'Dessert'] %>
+    <%= f.label :price %>
+    <%= f.number_field :price %>
+    <%= f.select :allergen, ['Nuts', 'Dairy', 'Soy', 'Shellfish', 'Multiple'] %>
+    <%= f.submit  %>
+  <% end %>
+
+  <% @entrees.each do |entree| %>
+        <%= entree.item %>,
+        <%= entree.category %>,
+        <%= entree.price %>,
+        <%= entree.allergen %>
+        <%= link_to "Edit", edit_entree_path(entree) %>
+        <%= button_to "x", entree_path(entree), method: :delete %><br />
+  <% end %>
+
+  <%= form_for @cover do |f| %>
+    <%= f.label :number %>
+    <%= f.text_field :number %>
+    <%= f.label :seats %>
+    <%= f.number_field :seats %>
+    <%= f.submit  %>
+  <% end %>
+
+  <% @covers.each do |cover| %>
+        <%= cover.number %>,
+        <%= cover.seats %>
+        <%= link_to "Edit", edit_cover_path(cover) %>
+        <%= button_to "x", cover_path(cover), method: :delete %><br />
+  <% end %>
+
+  <%= form_for @party do |f| %>
+    <%= f.label :guests %>
+    <%= f.number_field :guests %>
+    <%= f.collection_select :employee_id, Employee.all, :id, :username, include_blank: true %>
+    <%= f.collection_select :cover_id, Cover.all, :id, :number, include_blank: true %>
+    <%= f.submit %>
+  <% end %>
+
+  <% @parties.each do |party| %>
+        <%= party.guests %>,
+        <%= party.employee.username %>,
+        <%= party.cover.number %>
+        <%= link_to "Edit", edit_party_path(party) %>
+        <%= button_to "x", party_path(party), method: :delete %><br />
+  <% end %>
+<% end %>
+
+<%= form_for @party, url: employee_parties_path(current_employee) do |f| %>
+  <%= f.label :guests %>
+  <%= f.number_field :guests %>
+  <%= f.collection_select :cover_id, Cover.all, :id, :number, include_blank: true %>
+  <%= f.submit %>
+<% end %>
+
+<% current_employee.parties.each do |party| %>
+    <%= party.guests %>,
+    <%= party.employee.username %>,
+    <%= party.cover.number %>
+    <%= link_to "Edit", edit_employee_party_path(current_employee, party) %>
+<% end %>
