@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151217195120) do
+ActiveRecord::Schema.define(version: 20151219234347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,17 @@ ActiveRecord::Schema.define(version: 20151217195120) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "line_items", force: :cascade do |t|
+    t.integer  "party_id"
+    t.integer  "entree_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "fired"
+  end
+
+  add_index "line_items", ["entree_id"], name: "index_line_items_on_entree_id", using: :btree
+  add_index "line_items", ["party_id"], name: "index_line_items_on_party_id", using: :btree
+
   create_table "parties", force: :cascade do |t|
     t.integer  "guests"
     t.integer  "paid"
@@ -50,12 +61,15 @@ ActiveRecord::Schema.define(version: 20151217195120) do
     t.integer  "cover_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.string   "name"
   end
 
   add_index "parties", ["cover_id"], name: "index_parties_on_cover_id", using: :btree
   add_index "parties", ["employee_id"], name: "index_parties_on_employee_id", using: :btree
   add_index "parties", ["entree_id"], name: "index_parties_on_entree_id", using: :btree
 
+  add_foreign_key "line_items", "entrees"
+  add_foreign_key "line_items", "parties"
   add_foreign_key "parties", "covers"
   add_foreign_key "parties", "employees"
   add_foreign_key "parties", "entrees"

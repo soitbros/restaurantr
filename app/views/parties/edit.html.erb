@@ -1,0 +1,46 @@
+<h2><%= @party.cover.number %></h2>
+
+<% if current_employee.rights_class == 1 %>
+
+  <%= form_for @party, url: employee_party_path(current_employee,@party) do |f| %>
+    <%= f.label :guests %>
+    <%= f.number_field :guests %>
+    <%= f.collection_select :entree_ids, Entree.all, :id, :item, {}, {multiple: true}%>
+    <%= f.select :paid, [['Paid', 1], ['Unpaid', 0]], include_blank: true %>
+    <%= f.submit %>
+  <% end %>
+
+  <% @party.line_items.each do |line_item| %>
+        <%= line_item.entree.item %>,
+        $<%= line_item.entree.price %>
+        <%= line_item.party.cover.number %>
+        <%= line_item.party.paid %>
+  <% end %>
+
+  $<%= @party.line_items.map(&:entree).map(&:price).sum %>
+
+<% end %>
+
+<% if current_employee.rights_class == 3 %>
+  <% @party.line_items.each do |line_item| %>
+    <%= line_item.entree.item %>,
+    <%= line_item.party.cover.number %>
+      <%= form_for line_item do |f| %>
+        <%= f.select :fired, [['Fired', 1], ['Unfired', 0]], include_blank: true %>
+        <%= f.submit %>
+      <% end %>
+  <% end %>
+
+  <!-- t.integer  "party_id"
+  t.integer  "entree_id"
+  t.datetime "created_at", null: false
+  t.datetime "updated_at", null: false
+  t.integer  "fired" -->
+
+<% end %>
+
+
+
+
+
+<%= link_to "Back", employees_path(current_employee) %>

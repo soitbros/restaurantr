@@ -13,7 +13,7 @@
     <%= f.text_field :email %>
     <%= f.label :cell %>
     <%= f.text_field :cell %>
-    <%= f.select :rights_class, [['Manager', 2], ['Server', 1]] %>
+    <%= f.select :rights_class, [['Cook', 3], ['Manager', 2], ['Server', 1]] %>
     <%= f.submit  %>
   <% end %>
 
@@ -32,7 +32,7 @@
     <%= f.select :category, ['Appetizer', 'Pasta', 'Fish', 'Grill', 'Healthy', 'Dessert'] %>
     <%= f.label :price %>
     <%= f.number_field :price %>
-    <%= f.select :allergen, ['Nuts', 'Dairy', 'Soy', 'Shellfish', 'Multiple'] %>
+    <%= f.select :allergen, ['Nuts', 'Dairy', 'Soy', 'Shellfish', 'Multiple'], include_blank: true %>
     <%= f.submit  %>
   <% end %>
 
@@ -75,18 +75,57 @@
         <%= link_to "Edit", edit_party_path(party) %>
         <%= button_to "x", party_path(party), method: :delete %><br />
   <% end %>
+
+  <% @line_items.each do |line_item| %>
+    <% if line_item.party.paid != 1 %>
+      <%= line_item.entree.item %>
+      <%= line_item.party.cover.number %>
+      <%= line_item.party.paid %>
+    <% end %>
+    <%= link_to "Edit", edit_party_path(line_item.party) %> <br />
+    <%= button_to "x", line_item_path(line_item), method: :delete %><br />
+
+  <% end %>
+
 <% end %>
 
-<%= form_for @party, url: employee_parties_path(current_employee) do |f| %>
-  <%= f.label :guests %>
-  <%= f.number_field :guests %>
-  <%= f.collection_select :cover_id, Cover.all, :id, :number, include_blank: true %>
-  <%= f.submit %>
+<% if current_employee.rights_class == 1 %>
+
+  <%= form_for @party, url: employee_parties_path(current_employee) do |f| %>
+    <%= f.label :guests %>
+    <%= f.number_field :guests %>
+    <%= f.collection_select :cover_id, Cover.all, :id, :number, include_blank: true %>
+    <%= f.submit %>
+  <% end %>
+
+  <% current_employee.parties.each do |party| %>
+      <%= party.guests %>,
+      <%= party.employee.username %>,
+      <%= party.cover.number %>,
+      <% current_employee.line_items.each do |line_item| %>
+        <% if line_item.party.cover.number == party.cover.number %>
+          <%= line_item.entree.item %><br/>
+        <% end %>
+      <% end %>
+    <% if party.paid == 1 %>
+      Paid
+    <% end %>
+    <%= link_to "Edit", edit_employee_party_path(current_employee, party) %><br />
+  <% end %>
 <% end %>
 
-<% current_employee.parties.each do |party| %>
-    <%= party.guests %>,
-    <%= party.employee.username %>,
-    <%= party.cover.number %>
-    <%= link_to "Edit", edit_employee_party_path(current_employee, party) %>
+<% if current_employee.rights_class == 3 %>
+
+  <% @line_items.each do |line_item| %>
+    <% if line_item.fired != 1 %>
+      <%= line_item.entree.item %>
+      <%= line_item.party.cover.number %>
+      <%= form_for line_item do |f| %>
+        <%= f.select :fired, [['Fired', 1], ['Unfired', 0]], include_blank: true %>
+        <%= f.submit %>
+      <% end %>
+      <%= link_to "Edit", edit_party_path(line_item.party) %> <br />
+    <% end %>
+  <% end %>
+
 <% end %>

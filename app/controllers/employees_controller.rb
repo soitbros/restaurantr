@@ -9,6 +9,7 @@ class EmployeesController < ApplicationController
     @covers = Cover.all
     @party = Party.new
     @parties = Party.all
+    @line_items = LineItem.all
   end
 
   def create

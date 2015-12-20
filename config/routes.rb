@@ -6,11 +6,14 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   resources :employees do
-    resources :parties
+    resources :parties do
+      resources :entrees
+    end
   end
   resources :parties
   resources :entrees
   resources :covers
+  resources :line_items
 
 
   resources :sessions
