@@ -15,10 +15,11 @@
  *= require_self
  */
 
- @import url(https://fonts.googleapis.com/css?family=Cherry+Cream+Soda);
+ @import url(https://fonts.googleapis.com/css?family=Signika);
 
 h1,h2,h3,h4,h5,h6 {
-  font-family: 'Cherry Cream Soda', cursive;
+  font-family: 'Signika', cursive;
+  font-weight: 700;
   color: black;
 }
 
@@ -40,4 +41,41 @@ a {
 
 .green {
   background-color: green;
+}
+
+.check_box {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+.label {
+  margin: 10px;
+  padding: 5px;
+  border: 1px solid gray;
+}
+
+input:checked + .label {
+  background-color: red;
+}
+
+div.btn {
+    display: inline-block;
+    border: 2px solid #ccc;
+    margin-right: 5px;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+div.btn.on {
+    background-color: #777;
+    color: white;
+}
+
+.right {
+  text-align: right;
 }
