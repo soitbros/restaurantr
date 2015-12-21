@@ -1,3 +1,19 @@
 // Place all the styles related to the Welcome controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+  background: url('http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/5/1/1398944913153/Z78B9548new2_940_Adapt_Noise_128_15fps.gif') no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+.row {
+  background-color: white;
+  border-radius: 3em 5em;
+  text-align: center;
+  margin-top: 20%;
+  border: .5em black solid;
+  padding: 1em;
+}

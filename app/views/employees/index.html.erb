@@ -1,31 +1,38 @@
-<h3>Good Work!</h3>
+<div class="row">
+  <h3>Welcome back, <% if current_employee.username == "admin" %>Manager<% else %><%= current_employee.username %><% end %>!</h3>
 
-<%= button_to "Log Out", sessions_path, method: :delete %>
+  <%= button_to "Log Out", sessions_path, method: :delete %>
+</div>
+
 
 <% if current_employee.rights_class == 2 %>
+<div class="row">
+  <div class="one-third column">
+    <%= form_for @employee do |f| %>
+      <%= f.label :username %>
+      <%= f.text_field :username %>
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+      <%= f.label :cell %>
+      <%= f.text_field :cell %>
+      <%= f.select :rights_class, [['Server', 2], ['Cook', 3], ['Manager', 1]] %><br />
+      <%= f.submit  %>
+    <% end %>
 
-  <%= form_for @employee do |f| %>
-    <%= f.label :username %>
-    <%= f.text_field :username %>
-    <%= f.label :password %>
-    <%= f.password_field :password %>
-    <%= f.label :email %>
-    <%= f.text_field :email %>
-    <%= f.label :cell %>
-    <%= f.text_field :cell %>
-    <%= f.select :rights_class, [['Cook', 3], ['Manager', 2], ['Server', 1]] %>
-    <%= f.submit  %>
-  <% end %>
+    <% @employees.each do |employee| %>
+          <%= employee.username %>,
+          <%= employee.email %>,
+          <%= employee.cell %>,
+          <%= employee.rights_class %>
+          <%= link_to "Edit", edit_employee_path(employee) %>
+          <%= button_to "x", employee_path(employee), method: :delete %><br />
+    <% end %>
+  </div>
 
-  <% @employees.each do |employee| %>
-        <%= employee.username %>,
-        <%= employee.email %>,
-        <%= employee.cell %>,
-        <%= employee.rights_class %>
-        <%= link_to "Edit", edit_employee_path(employee) %>
-        <%= button_to "x", employee_path(employee), method: :delete %><br />
-  <% end %>
 
+  <div class="one-third column">
   <%= form_for @entree do |f| %>
     <%= f.label :item %>
     <%= f.text_field :item %>
@@ -44,6 +51,9 @@
         <%= link_to "Edit", edit_entree_path(entree) %>
         <%= button_to "x", entree_path(entree), method: :delete %><br />
   <% end %>
+</div>
+
+<div class="one-third column">
 
   <%= form_for @cover do |f| %>
     <%= f.label :number %>
@@ -59,6 +69,9 @@
         <%= link_to "Edit", edit_cover_path(cover) %>
         <%= button_to "x", cover_path(cover), method: :delete %><br />
   <% end %>
+</div>
+</div>
+<div class="row">
 
   <%= form_for @party do |f| %>
     <%= f.label :guests %>
@@ -86,6 +99,7 @@
     <%= button_to "x", line_item_path(line_item), method: :delete %><br />
 
   <% end %>
+</div>
 
 <% end %>
 
@@ -99,33 +113,62 @@
   <% end %>
 
   <% current_employee.parties.each do |party| %>
+  <div class="row <% if party.paid == 1 %>
+    green
+  <% end %>">
       <%= party.guests %>,
       <%= party.employee.username %>,
       <%= party.cover.number %>,
-      <% current_employee.line_items.each do |line_item| %>
-        <% if line_item.party.cover.number == party.cover.number %>
-          <%= line_item.entree.item %><br/>
-        <% end %>
+      <% party.line_items.each do |line_item| %>
+            <%= line_item.entree.item %>,
+            $<%= line_item.entree.price %>
+            <%= line_item.party.cover.number %>
+            <%= line_item.party.paid %>
       <% end %>
     <% if party.paid == 1 %>
       Paid
     <% end %>
-    <%= link_to "Edit", edit_employee_party_path(current_employee, party) %><br />
+    <%= link_to "Edit", edit_employee_party_path(current_employee, party) %>
+  </div>
   <% end %>
 <% end %>
 
 <% if current_employee.rights_class == 3 %>
 
   <% @line_items.each do |line_item| %>
-    <% if line_item.fired != 1 %>
-      <%= line_item.entree.item %>
-      <%= line_item.party.cover.number %>
+    <div class="row <% if Time.now > line_item.created_at + 15.minutes %>
+      red
+    <% elsif Time.now > line_item.created_at + 10.minutes %>
+      orange
+    <% elsif Time.now > line_item.created_at + 5.minutes %>
+      yellow
+    <% end %>">
+    <div class="seven columns">
+      <% if line_item.fired != 1 %>
+        <%= line_item.entree.item %> for table
+        <%= line_item.party.cover.number %>, server
+        <%= line_item.party.employee.username %><br />
+        Time elapsed since order:
+        <% if Time.now > line_item.created_at + 15.minutes %>
+          Over 15 minutes
+        <% elsif Time.now > line_item.created_at + 10.minutes %>
+          Over 10 minutes
+        <% elsif Time.now > line_item.created_at + 5.minutes %>
+          Over 5 minutes
+        <% else %>
+        <%= time_ago_in_words(line_item.created_at) %>
+        <% end %>
+    </div>
+    <div class="five columns">
       <%= form_for line_item do |f| %>
         <%= f.select :fired, [['Fired', 1], ['Unfired', 0]], include_blank: true %>
         <%= f.submit %>
       <% end %>
-      <%= link_to "Edit", edit_party_path(line_item.party) %> <br />
+      <%= link_to "<button>Edit</button>".html_safe, edit_party_path(line_item.party) %> <br />
     <% end %>
+    </div>
+
+    </div>
   <% end %>
 
 <% end %>

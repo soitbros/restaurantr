@@ -2,6 +2,12 @@ class PartiesController < ApplicationController
 
   def edit
     @party = Party.find(params[:id])
+    @check = @party.line_items.map(&:entree).map(&:price).sum
+    @tax = @party.line_items.map(&:entree).map(&:price).sum * 0.0875
+    @tip_fine = @party.line_items.map(&:entree).map(&:price).sum * 0.15
+    @tip_good = @party.line_items.map(&:entree).map(&:price).sum * 0.20
+    @tip_great = @party.line_items.map(&:entree).map(&:price).sum * 0.25
+    @total = @check + @tax
   end
 
   def update

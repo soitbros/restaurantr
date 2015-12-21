@@ -5,19 +5,27 @@
   <%= form_for @party, url: employee_party_path(current_employee,@party) do |f| %>
     <%= f.label :guests %>
     <%= f.number_field :guests %>
-    <%= f.collection_select :entree_ids, Entree.all, :id, :item, {}, {multiple: true}%>
-    <%= f.select :paid, [['Paid', 1], ['Unpaid', 0]], include_blank: true %>
+    <%= f.collection_check_boxes :entree_ids, Entree.all, :id, :item, {}, {multiple: true} %>
     <%= f.submit %>
   <% end %>
 
   <% @party.line_items.each do |line_item| %>
         <%= line_item.entree.item %>,
-        $<%= line_item.entree.price %>
-        <%= line_item.party.cover.number %>
-        <%= line_item.party.paid %>
+        $<%= line_item.entree.price %><br />
   <% end %>
 
-  $<%= @party.line_items.map(&:entree).map(&:price).sum %>
+  Subtotal: $<%= number_with_precision(@check, precision:2) %>
+  Tax: $<%= number_with_precision(@tax, precision:2) %>
+  Total: $<%= number_with_precision(@total, precision:2) %>
+  Suggested Tip
+  15%: $<%= number_with_precision(@tip_fine, precision:2) %>
+  20%: $<%= number_with_precision(@tip_good, precision:2) %>
+  25%: $<%= number_with_precision(@tip_great, precision:2) %>
+
+  <%= form_for @party, url: employee_party_path(current_employee,@party) do |f| %>
+    <%= f.select :paid, [['Paid', 1], ['Unpaid', 0]], include_blank: true %>
+    <%= f.submit %>
+  <% end %>
 
 <% end %>
 

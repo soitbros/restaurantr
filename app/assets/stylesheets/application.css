@@ -10,9 +10,34 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
+ *= require normalize
+ *= require skeleton
  *= require_self
  */
-body {
-  background-color: lightblue;
+
+ @import url(https://fonts.googleapis.com/css?family=Cherry+Cream+Soda);
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Cherry Cream Soda', cursive;
+  color: black;
+}
+
+a {
+  text-decoration: none;
+}
+
+.red {
+  background-color: red;
+}
+
+.orange {
+  background-color: orange;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.green {
+  background-color: green;
 }
