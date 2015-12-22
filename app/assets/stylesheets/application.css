@@ -15,7 +15,11 @@
  *= require_self
  */
 
- @import url(https://fonts.googleapis.com/css?family=Signika);
+@import url(https://fonts.googleapis.com/css?family=Signika);
+
+@-ms-viewport{
+ width: device-width;
+}
 
 body {
   background-color:white;
