@@ -12,32 +12,81 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
-//= require_tree .
-
-console.log("say what")
+//= require jquery.turbolinks
 
 window.onload = init;
 
-function init(){
+function init() {
 
-  var selectName = $('select').attr('name');
+$("#open-employee-create-modal").on('click', function(){
+  $('#employee-create-modal').toggle();
+})
 
-  // add a hidden element with the same name as the select
-  var hidden = $('<input type="hidden" name="'+selectName+'">');
-  hidden.val($('select').val());
-  hidden.insertAfter($('select'));
+$("#close-employee-create-modal").on('click', function(){
+  $('#employee-create-modal').toggle();
+})
 
-  $("select option").unwrap().each(function() {
-      var btn = $('<div class="btn">'+$(this).text()+'</div>');
-      if($(this).is(':checked')) btn.addClass('on');
-      $(this).replaceWith(btn);
-  });
+$("#submit-btn").on('click', function(){
+  $('#employee-create-modal').toggle();
+})
 
-  $(document).on('click', '.btn', function() {
-      $('.btn').removeClass('on');
-      $(this).addClass('on');
-      $('input[name="'+selectName+'"]').val($(this).text());
-  });
+$("#open-employee-list-modal").on('click', function(){
+  $('#employee-list-modal').toggle();
+})
 
-};
+$("#close-employee-list-modal").on('click', function(){
+  $('#employee-list-modal').toggle();
+})
+
+$("#submit-btn").on('click', function(){
+  $('#employee-list-modal').toggle();
+})
+
+$("#open-entree-create-modal").on('click', function(){
+  $('#entree-create-modal').toggle();
+})
+
+$("#close-entree-create-modal").on('click', function(){
+  $('#entree-create-modal').toggle();
+})
+
+$("#submit-btn").on('click', function(){
+  $('#entree-create-modal').toggle();
+})
+
+$("#open-entree-list-modal").on('click', function(){
+  $('#entree-list-modal').toggle();
+})
+
+$("#close-entree-list-modal").on('click', function(){
+  $('#entree-list-modal').toggle();
+})
+
+$("#submit-btn").on('click', function(){
+  $('#entree-list-modal').toggle();
+})
+
+$("#open-table-create-modal").on('click', function(){
+  $('#table-create-modal').toggle();
+})
+
+$("#close-table-create-modal").on('click', function(){
+  $('#table-create-modal').toggle();
+})
+
+$("#submit-btn").on('click', function(){
+  $('#table-create-modal').toggle();
+})
+
+$("#open-table-list-modal").on('click', function(){
+  $('#table-list-modal').toggle();
+})
+
+$("#close-table-list-modal").on('click', function(){
+  $('#table-list-modal').toggle();
+})
+
+$("#submit-btn").on('click', function(){
+  $('#table-list-modal').toggle();
+})
+}

@@ -17,6 +17,13 @@
 
  @import url(https://fonts.googleapis.com/css?family=Signika);
 
+body {
+  background-color:white;
+  background-image: linear-gradient(90deg, rgba(200,0,0,.5) 50%, transparent 50%),
+  linear-gradient(rgba(200,0,0,.5) 50%, transparent 50%);
+  background-size:50px 50px;
+}
+
 h1,h2,h3,h4,h5,h6 {
   font-family: 'Signika', cursive;
   font-weight: 700;
@@ -25,22 +32,92 @@ h1,h2,h3,h4,h5,h6 {
 
 a {
   text-decoration: none;
+  color: black;
+}
+
+#employee-create-modal, #employee-list-modal, #entree-create-modal, #entree-list-modal, #table-create-modal, #table-list-modal {
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0, .4)
+}
+
+#close-employee-create-modal:hover, #close-employee-list-modal:hover, #close-entree-create-modal:hover, #close-entree-list-modal:hover, #close-table-create-modal:hover, #close-table-list-modal:hover{
+  cursor: pointer;
+}
+
+.modal-content {
+  position: relative;
+  margin: 0 30%;
+  margin: 0 auto;
+  background-color: white;
+  top: 150px;
+  width: 40%;
+}
+
+.modal-header {
+  position: absolute;
+  background-color: white;
+  width: 100%;
+  padding: 1em;
+}
+
+.modal-body {
+  position: absolute;
+  width: 100%;
+  top: 50px;
+  background-color: white;
+  border-top: 2px solid black;
+  padding: 1em;
+}
+
+.container {
+  background-color: white;
+}
+
+.box{
+  border: .15em black solid;
+  padding: .15em;
 }
 
 .red {
-  background-color: red;
+  background-color: crimson;
 }
 
 .orange {
-  background-color: orange;
+  background-color: darkorange;
 }
 
 .yellow {
-  background-color: yellow;
+  background-color: gold;
 }
 
 .green {
-  background-color: green;
+  background-color: seagreen;
+}
+
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+.float {
+  float: right;
+}
+
+.gap {
+  margin-bottom: 1.25em;
+}
+
+.header {
+  margin-top: 1%;
+  background-color: darkred;
 }
 
 .check_box {
@@ -54,6 +131,10 @@ a {
 	width: 1px;
 }
 
+.modal:nth-child(odd){
+  background-color: gray;
+}
+
 .label {
   margin: 10px;
   padding: 5px;
@@ -61,21 +142,5 @@ a {
 }
 
 input:checked + .label {
-  background-color: red;
-}
-
-div.btn {
-    display: inline-block;
-    border: 2px solid #ccc;
-    margin-right: 5px;
-    padding: 2px 5px;
-    cursor: pointer;
-}
-div.btn.on {
-    background-color: #777;
-    color: white;
-}
-
-.right {
-  text-align: right;
+  background-color: crimson;
 }

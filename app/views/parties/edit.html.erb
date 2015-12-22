@@ -1,11 +1,16 @@
-<div class="row">
-  <h2>Table <%= @party.cover.number %></h2> <%= link_to "Back", employees_path(current_employee) %>
-
+<div class="row header gap">
+  <div class="offset-by-one eight columns">
+    <h2>Table <%= @party.cover.number %></h2>
+  </div>
+  <div class="offset-by-one two columns">
+    <%= link_to "Back", employees_path(current_employee) %>
+  </div>
 </div>
-<% if current_employee.rights_class == 1 %>
+
+<% if current_employee.rights_class == 1 || current_employee.rights_class == 2 %>
 
   <div class="row">
-    <div class="one-half column">
+    <div class="offset-by-one five columns">
       <h3>Order</h3>
       <%= form_for @party, url: employee_party_path(current_employee,@party) do |f| %>
 
@@ -16,15 +21,20 @@
         <%= f.submit %>
       <% end %>
     </div>
-    <div class="one-half column">
+    <div class="five columns">
       <h3>Check</h3>
-      Guests: <%= @party.guests %>
-      <span class="right">Table: <%= @party.cover.number %><br /></span>
+      <div class="right">
+        Guests: <%= @party.guests %> / Table: <%= @party.cover.number %>
+      </div>
       <table class="u-full-width">
       <tbody>
         <tr>
           <td></td>
           <td></td>
+        </tr>
+        <tr>
+          <td>Item</td>
+          <td class="right">Cost</td>
         </tr>
         <% @party.line_items.each do |line_item| %>
           <tr>
@@ -34,35 +44,23 @@
         <% end %>
       </tbody>
     </table>
-    <div class="right">
-      Subtotal: $<%= number_with_precision(@check, precision:2) %><br />
-      Tax: $<%= number_with_precision(@tax, precision:2) %><br />
-      Total: $<%= number_with_precision(@total, precision:2) %><br />
-      Suggested Tip<br />
-      15%: $<%= number_with_precision(@tip_fine, precision:2) %>
-      20%: $<%= number_with_precision(@tip_good, precision:2) %>
-      25%: $<%= number_with_precision(@tip_great, precision:2) %>
-      <%= form_for @party, url: employee_party_path(current_employee,@party) do |f| %>
-        <%= f.select :paid, [['Paid', 1], ['Unpaid', 0]] %><br /><br />
-        <%= f.submit %>
-      <% end %>
+      <div class="right">
+        Subtotal: $<%= number_with_precision(@check, precision:2) %><br />
+        Tax: $<%= number_with_precision(@tax, precision:2) %><br />
+        Total: $<%= number_with_precision(@total, precision:2) %><br />
+        Suggested Tip<br />
+        15%: $<%= number_with_precision(@tip_fine, precision:2) %>
+        20%: $<%= number_with_precision(@tip_good, precision:2) %>
+        25%: $<%= number_with_precision(@tip_great, precision:2) %>
+        <%= form_for @party, url: employee_party_path(current_employee,@party) do |f| %>
+          <%= f.select :paid, [['Paid', 1], ['Unpaid', 0]] %><br />
+          <%= f.submit %>
+        <% end %>
+      </div>
     </div>
-
-
+    <div class="one column">
 
     </div>
   </div>
-
-<% end %>
-
-<% if current_employee.rights_class == 3 %>
-  <% @party.line_items.each do |line_item| %>
-    <%= line_item.entree.item %>,
-    <%= line_item.party.cover.number %>
-      <%= form_for line_item do |f| %>
-        <%= f.select :fired, [['Fired', 1], ['Unfired', 0]] %>
-        <%= f.submit %>
-      <% end %>
-  <% end %>
 
 <% end %>

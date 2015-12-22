@@ -13,7 +13,7 @@ class PartiesController < ApplicationController
   def update
     @party = Party.find(params[:id])
     @party.update(party_params)
-    redirect_to edit_employee_party_path(params[:employee_id],params[:id])
+    redirect_to employees_path
   end
 
   def destroy

@@ -1,12 +1,16 @@
-<%= form_for @employee do |f| %>
-  <%= f.label :username %>
-  <%= f.text_field :username %>
-  <%= f.label :password %>
-  <%= f.password_field :password %>
-  <%= f.label :email %>
-  <%= f.text_field :email %>
-  <%= f.label :cell %>
-  <%= f.text_field :cell %>
-  <%= f.select :rights_class, [['Server', 1], ['Manager', 2]] %>
-  <%= f.submit  %>
+<% if current_employee.rights_class == 2 %>
+
+  <%= form_for @employee do |f| %>
+    <%= f.label :username %>
+    <%= f.text_field :username %>
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+    <%= f.label :cell %>
+    <%= f.text_field :cell %>
+    <%= f.select :rights_class, [['Server', 2], ['Cook', 3], ['Manager', 1]] %><br />
+    <%= f.submit  %>
+  <% end %>
+
 <% end %>

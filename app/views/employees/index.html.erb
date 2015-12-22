@@ -1,174 +1,290 @@
-<div class="row">
-  <h3>Welcome back, <% if current_employee.username == "admin" %>Manager<% else %><%= current_employee.username %><% end %>!</h3>
-
-  <%= button_to "Log Out", sessions_path, method: :delete %>
+<div class="row header gap">
+  <div class="offset-by-one eight columns">
+    <h3>Welcome back, <% if current_employee.username == "admin" %>Manager<% else %><%= current_employee.username %><% end %>!</h3>
+  </div>
+  <div class="offset-by-one two columns">
+    <%= link_to "Log Out", sessions_path, method: :delete %>
+  </div>
 </div>
 
 
 <% if current_employee.rights_class == 2 %>
-<div class="row">
-  <div class="one-third column">
-    <%= form_for @employee do |f| %>
-      <%= f.label :username %>
-      <%= f.text_field :username %>
-      <%= f.label :password %>
-      <%= f.password_field :password %>
-      <%= f.label :email %>
-      <%= f.text_field :email %>
-      <%= f.label :cell %>
-      <%= f.text_field :cell %>
-      <%= f.select :rights_class, [['Server', 2], ['Cook', 3], ['Manager', 1]] %><br />
-      <%= f.submit  %>
-    <% end %>
-
-    <% @employees.each do |employee| %>
-          <%= employee.username %>,
-          <%= employee.email %>,
-          <%= employee.cell %>,
-          <%= employee.rights_class %>
-          <%= link_to "Edit", edit_employee_path(employee) %>
-          <%= button_to "x", employee_path(employee), method: :delete %><br />
+  <div class="row">
+    <% @parties.each do |party| %>
+      <div class="box gap offset-by-one three columns <% if party.paid == 1 %>
+        green
+      <% end %>">
+        <span class="float">
+          <%= link_to "Delete", party_path(party), method: :delete %>
+        </span>
+        Server: <%= party.employee.username %><br />
+        Table: <%= party.cover.number %><br />
+        Guests: <%= party.guests %><br />
+        Orders: <br />
+        <% party.line_items.each do |line_item| %>
+          <span class="<% if Time.now > line_item.created_at + 15.minutes %>
+            red
+          <% elsif Time.now > line_item.created_at + 10.minutes %>
+            orange
+          <% elsif Time.now > line_item.created_at + 5.minutes %>
+            yellow
+          <% end %>">
+            <%= line_item.entree.item %>
+          </span><br />
+        <% end %>
+        <span class="float">
+          <%= link_to "Edit", edit_party_path(party) %>
+        </span>
+      </div>
     <% end %>
   </div>
 
+  <div class="row">
+    <div class="one-third column center">
+      <button id="open-employee-create-modal">Create Employee</button><br />
+      <button id="open-employee-list-modal">View Employees</button>
+    </div>
+    <div class="one-third column center">
+      <button id="open-entree-create-modal">Create Menu Item</button><br />
+      <button id="open-entree-list-modal">View Menu Items</button>
+    </div>
+    <div class="one-third column center">
+      <button id="open-table-create-modal">Create Table</button><br />
+      <button id="open-table-list-modal">View Tables</button>
+    </div>
+  </div>
 
-  <div class="one-third column">
-  <%= form_for @entree do |f| %>
-    <%= f.label :item %>
-    <%= f.text_field :item %>
-    <%= f.select :category, ['Appetizer', 'Pasta', 'Fish', 'Grill', 'Healthy', 'Dessert'] %>
-    <%= f.label :price %>
-    <%= f.number_field :price %>
-    <%= f.select :allergen, ['Nuts', 'Dairy', 'Soy', 'Shellfish', 'Multiple'], include_blank: true %>
-    <%= f.submit  %>
-  <% end %>
 
-  <% @entrees.each do |entree| %>
-        <%= entree.item %>,
-        <%= entree.category %>,
-        <%= entree.price %>,
-        <%= entree.allergen %>
-        <%= link_to "Edit", edit_entree_path(entree) %>
-        <%= button_to "x", entree_path(entree), method: :delete %><br />
-  <% end %>
-</div>
+  <div id="employee-create-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div id="close-employee-create-modal" class="float">close</div>
+        <h3>Create Employee</h3>
+      </div>
+      <div class="modal-body">
+        <%= form_for @employee do |f| %>
+          <%= f.label :username %>
+          <%= f.text_field :username %>
+          <%= f.label :password %>
+          <%= f.password_field :password %>
+          <%= f.label :email %>
+          <%= f.text_field :email %>
+          <%= f.label :cell %>
+          <%= f.text_field :cell %><br />
+          <%= f.select :rights_class, [['Server', 2], ['Cook', 3], ['Manager', 1]] %><br />
+          <%= f.submit  %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-<div class="one-third column">
+  <div id="employee-list-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div id="close-employee-list-modal" class="float">close</div>
+        <h3>Employee Roster</h3>
+      </div>
+      <div class="modal-body">
+        <% @employees.each do |employee| %>
+          <div class="row modal">
+            <div class="two columns">
+              <%= employee.username %>
+            </div>
+            <div class="four columns">
+              <%= employee.email %>
+            </div>
+            <div class="three columns">
+              <%= employee.cell %>
+            </div>
+            <div class="one column">
+              <%= link_to "Edit", edit_employee_path(employee) %>
+            </div>
+            <div class="one column">
+              <%= link_to "Delete", employee_path(employee), method: :delete %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-  <%= form_for @cover do |f| %>
-    <%= f.label :number %>
-    <%= f.text_field :number %>
-    <%= f.label :seats %>
-    <%= f.number_field :seats %>
-    <%= f.submit  %>
-  <% end %>
+  <div id="entree-create-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div id="close-entree-create-modal" class="float">close</div>
+        <h3>Create Menu Item</h3>
+      </div>
+      <div class="modal-body">
+        <%= form_for @entree do |f| %>
+          <%= f.label :item %>
+          <%= f.text_field :item %>
+          <%= f.select :category, ['Appetizer', 'Pasta', 'Fish', 'Grill', 'Healthy', 'Dessert'] %>
+          <%= f.label :price %>
+          <%= f.number_field :price %>
+          <%= f.select :allergen, ['Nuts', 'Dairy', 'Soy', 'Shellfish', 'Multiple'], include_blank: true %>
+          <%= f.submit  %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-  <% @covers.each do |cover| %>
-        <%= cover.number %>,
-        <%= cover.seats %>
-        <%= link_to "Edit", edit_cover_path(cover) %>
-        <%= button_to "x", cover_path(cover), method: :delete %><br />
-  <% end %>
-</div>
-</div>
-<div class="row">
+  <div id="entree-list-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div id="close-entree-list-modal" class="float">close</div>
+        <h3>Menu Items</h3>
+      </div>
+      <div class="modal-body">
+        <% @entrees.each do |entree| %>
+          <div class="row modal">
+            <div class="two columns">
+              <%= link_to "Delete", entree_path(entree), method: :delete %>
+            </div>
+            <div class="four columns">
+              <%= entree.item %>
+            </div>
+            <div class="two columns">
+              <%= entree.category %>
+            </div>
+            <div class="one column">
+              $<%= entree.price %>
+            </div>
+            <div class="two columns">
+              <%= entree.allergen %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-  <%= form_for @party do |f| %>
-    <%= f.label :guests %>
-    <%= f.number_field :guests %>
-    <%= f.collection_select :employee_id, Employee.all, :id, :username, include_blank: true %>
-    <%= f.collection_select :cover_id, Cover.all, :id, :number, include_blank: true %>
-    <%= f.submit %>
-  <% end %>
+  <div id="table-create-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div id="close-table-create-modal" class="float">close</div>
+        <h3>Create Table</h3>
+      </div>
+      <div class="modal-body">
+        <%= form_for @cover do |f| %>
+          <%= f.label :number %>
+          <%= f.text_field :number %>
+          <%= f.label :seats %>
+          <%= f.number_field :seats %>
+          <%= f.submit  %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-  <% @parties.each do |party| %>
-        <%= party.guests %>,
-        <%= party.employee.username %>,
-        <%= party.cover.number %>
-        <%= link_to "Edit", edit_party_path(party) %>
-        <%= button_to "x", party_path(party), method: :delete %><br />
-  <% end %>
-
-  <% @line_items.each do |line_item| %>
-    <% if line_item.party.paid != 1 %>
-      <%= line_item.entree.item %>
-      <%= line_item.party.cover.number %>
-      <%= line_item.party.paid %>
-    <% end %>
-    <%= link_to "Edit", edit_party_path(line_item.party) %> <br />
-    <%= button_to "x", line_item_path(line_item), method: :delete %><br />
-
-  <% end %>
-</div>
+  <div id="table-list-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div id="close-table-list-modal" class="float">close</div>
+        <h3>Menu Items</h3>
+      </div>
+      <div class="modal-body">
+        <% @covers.each do |cover| %>
+          <div class="row modal">
+            <div class="two columns">
+              <%= link_to "Delete", cover_path(cover), method: :delete %>
+            </div>
+            <div class="four columns">
+              <%= cover.number %>
+            </div>
+            <div class="two columns">
+              <%= cover.seats %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
 <% end %>
 
 <% if current_employee.rights_class == 1 %>
 
-  <%= form_for @party, url: employee_parties_path(current_employee) do |f| %>
-    <%= f.label :guests %>
-    <%= f.number_field :guests %>
-    <%= f.collection_select :cover_id, Cover.all, :id, :number, include_blank: true %>
-    <%= f.submit %>
-  <% end %>
-
-  <% current_employee.parties.each do |party| %>
-  <div class="row <% if party.paid == 1 %>
-    green
-  <% end %>">
-      <%= party.guests %>,
-      <%= party.employee.username %>,
-      <%= party.cover.number %>,
-      <% party.line_items.each do |line_item| %>
-            <%= line_item.entree.item %>,
-            $<%= line_item.entree.price %>
-            <%= line_item.party.cover.number %>
-            <%= line_item.party.paid %>
+  <div class="row">
+    <div class="offset-by-three eight columns">
+      <%= form_for @party, url: employee_parties_path(current_employee) do |f| %>
+        <%= f.label :guests %>
+        <%= f.number_field :guests %>
+        <%= f.collection_select :cover_id, Cover.all, :id, :number, include_blank: true %>
+        <%= f.submit %>
       <% end %>
-    <% if party.paid == 1 %>
-      Paid
-    <% end %>
-    <%= link_to "Edit", edit_employee_party_path(current_employee, party) %>
+    </div>
   </div>
-  <% end %>
+
+  <div class="row">
+    <% current_employee.parties.each do |party| %>
+      <div class="box gap offset-by-one three columns <% if party.paid == 1 %>
+        green
+      <% end %>">
+        <span class="float">
+          <%= link_to "Delete", party_path(party), method: :delete %>
+        </span>
+        Table: <%= party.cover.number %><br />
+        Guests: <%= party.guests %><br />
+        Orders: <br />
+        <% party.line_items.each do |line_item| %>
+          <%= line_item.entree.item %><br />
+        <% end %>
+        <span class="float">
+          <%= link_to "Edit", edit_party_path(party) %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+
 <% end %>
 
 <% if current_employee.rights_class == 3 %>
 
   <% @line_items.each do |line_item| %>
-    <div class="row <% if Time.now > line_item.created_at + 15.minutes %>
-      red
-    <% elsif Time.now > line_item.created_at + 10.minutes %>
-      orange
-    <% elsif Time.now > line_item.created_at + 5.minutes %>
-      yellow
-    <% end %>">
-    <div class="seven columns">
-      <% if line_item.fired != 1 %>
-        <%= line_item.entree.item %> for table
-        <%= line_item.party.cover.number %>, server
-        <%= line_item.party.employee.username %><br />
-        Time elapsed since order:
-        <% if Time.now > line_item.created_at + 15.minutes %>
-          Over 15 minutes
-        <% elsif Time.now > line_item.created_at + 10.minutes %>
-          Over 10 minutes
-        <% elsif Time.now > line_item.created_at + 5.minutes %>
-          Over 5 minutes
-        <% else %>
-        <%= time_ago_in_words(line_item.created_at) %>
-        <% end %>
-    </div>
-    <div class="five columns">
-      <%= form_for line_item do |f| %>
-        <%= f.select :fired, [['Fired', 1], ['Unfired', 0]], include_blank: true %>
-        <%= f.submit %>
-      <% end %>
-      <%= link_to "<button>Edit</button>".html_safe, edit_party_path(line_item.party) %> <br />
-    <% end %>
-    </div>
+    <% if line_item.fired != 1 %>
+      <div class="row <% if Time.now > line_item.created_at + 15.minutes %>
+        red
+      <% elsif Time.now > line_item.created_at + 10.minutes %>
+        orange
+      <% elsif Time.now > line_item.created_at + 5.minutes %>
+        yellow
+      <% end %>">
 
-    </div>
+        <div class="offset-by-one one column">
+          <%= line_item.entree.item %>
+        </div>
+        <div class="one column">
+          <%= line_item.party.cover.number %>
+        </div>
+        <div class="one column">
+          <%= line_item.party.employee.username %>
+        </div>
+        <div class="two columns">
+          Waiting
+          <% if Time.now > line_item.created_at + 15.minutes %>
+            over 15 minutes
+          <% elsif Time.now > line_item.created_at + 10.minutes %>
+            over 10 minutes
+          <% elsif Time.now > line_item.created_at + 5.minutes %>
+            over 5 minutes
+          <% else %>
+          <%= time_ago_in_words(line_item.created_at) %>
+          <% end %>
+        </div>
+
+        <div class="five columns">
+          <%= form_for line_item do |f| %>
+            <%= f.select :fired, [['Fired', 1], ['Unfired', 0]] %>
+            <%= f.submit %>
+          <% end %>
+
+        </div>
+
+        <div class="one column">
+        </div>
+
+      </div>
+    <% end %>
   <% end %>
 
 <% end %>
