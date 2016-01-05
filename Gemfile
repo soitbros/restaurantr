@@ -28,6 +28,8 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'jquery-turbolinks'
 
+gem 'exchange'
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 

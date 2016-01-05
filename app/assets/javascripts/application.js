@@ -89,4 +89,11 @@ $("#close-table-list-modal").on('click', function(){
 $("#submit-btn").on('click', function(){
   $('#table-list-modal').toggle();
 })
+
+$('#toggle').click(function() {
+    $('.toggle').toggle();
+    $(this).text(function(i,txt) {
+        return txt === "Convert EUR" ? "Convert USD" : "Convert EUR";
+    });
+});
 }

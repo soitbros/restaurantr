@@ -18,6 +18,8 @@
           <%= b.check_box(class: "check_box") %>
           <%= b.label(class: "label") %>
         <% end %>
+        <%= f.label "Notes" %>
+        <%= f.text_field :name %><br />
         <%= f.submit %>
       <% end %>
     </div>
@@ -39,23 +41,24 @@
         <% @party.line_items.each do |line_item| %>
           <tr>
             <td><%= line_item.entree.item %></td>
-            <td class="right">$<%= line_item.entree.price %></td>
+            <td class="right"><span id="usd" class="toggle"><%= line_item.entree.price.in(:usd) %></span><span id="eur" class="toggle"><%= line_item.entree.price.in(:usd).to(:eur) %></span></td>
           </tr>
         <% end %>
       </tbody>
     </table>
       <div class="right">
-        Subtotal: $<%= number_with_precision(@check, precision:2) %><br />
-        Tax: $<%= number_with_precision(@tax, precision:2) %><br />
-        Total: $<%= number_with_precision(@total, precision:2) %><br />
+        Subtotal: <span id="usd" class="toggle"><%= @check %></span><span id="eur" class="toggle"><%= @check_euro %></span><br />
+        Tax: <span id="usd" class="toggle"><%= @tax %></span><span id="eur" class="toggle"><%= @tax_euro %></span><br />
+        Total: <span id="usd" class="toggle"><%= @total %></span><span id="eur" class="toggle"><%= @total_euro %></span><br />
         Suggested Tip<br />
-        15%: $<%= number_with_precision(@tip_fine, precision:2) %>
-        20%: $<%= number_with_precision(@tip_good, precision:2) %>
-        25%: $<%= number_with_precision(@tip_great, precision:2) %>
+        15%: <span id="usd" class="toggle"><%= @tip_fine %></span><span id="eur" class="toggle"><%= @tip_fine_euro %></span>
+        20%: <span id="usd" class="toggle"><%= @tip_good %></span><span id="eur" class="toggle"><%= @tip_good_euro %></span>
+        25%: <span id="usd" class="toggle"><%= @tip_great %></span><span id="eur" class="toggle"><%= @tip_great_euro %></span>
         <%= form_for @party, url: employee_party_path(current_employee,@party) do |f| %>
           <%= f.select :paid, [['Paid', 1], ['Unpaid', 0]] %><br />
           <%= f.submit %>
         <% end %>
+        <button id="toggle">Convert EUR</button>
       </div>
     </div>
     <div class="one column">

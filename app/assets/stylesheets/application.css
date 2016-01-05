@@ -148,3 +148,7 @@ a {
 input:checked + .label {
   background-color: crimson;
 }
+
+#eur {
+  display: none;
+}

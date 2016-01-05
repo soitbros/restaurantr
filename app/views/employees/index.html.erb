@@ -32,6 +32,7 @@
             <%= line_item.entree.item %>
           </span><br />
         <% end %>
+        Notes: <%= party.name %>
         <span class="float">
           <%= link_to "Edit", edit_party_path(party) %>
         </span>
@@ -229,6 +230,7 @@
         <% party.line_items.each do |line_item| %>
           <%= line_item.entree.item %><br />
         <% end %>
+        Notes: <%= party.name %>
         <span class="float">
           <%= link_to "Edit", edit_party_path(party) %>
         </span>
@@ -258,6 +260,9 @@
         </div>
         <div class="one column">
           <%= line_item.party.employee.username %>
+        </div>
+        <div class="one column">
+          <%= line_item.party.name %>
         </div>
         <div class="two columns">
           Waiting
